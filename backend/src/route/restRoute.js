@@ -16,7 +16,6 @@ import {
   getUserPosts,
   deleteUserPosts,
 } from "../controller/postController.js";
-// import { addAvatar } from "../controller/avatarController.js";
 const allRoutes = (app) => {
   app
     .route("/profile")
@@ -34,7 +33,7 @@ const allRoutes = (app) => {
 
     .put(updateProfileByID);
   app
-    .route("/profile/check/:publicAddress")
+    .route("/profile/check/:profileID")
 
     .get(checkProfile);
   app
