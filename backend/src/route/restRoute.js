@@ -16,6 +16,7 @@ import {
   getUserPosts,
   deleteUserPosts,
 } from "../controller/postController.js";
+import { scrape } from "../controller/scrapeController.js";
 const allRoutes = (app) => {
   app
     .route("/profile")
@@ -33,7 +34,7 @@ const allRoutes = (app) => {
 
     .put(updateProfileByID);
   app
-    .route("/profile/check/:profileID")
+    .route("/profile/check/:publicAddress")
 
     .get(checkProfile);
   app
@@ -65,10 +66,10 @@ const allRoutes = (app) => {
     .route("/post/deleteuserposts/:userid")
 
     .delete(deleteUserPosts);
-  // app
-  //   .route("/avatar/addavatar")
+  app
+    .route("/getarticles/")
 
-  //   .post(addAvatar);
+    .get(scrape);
 };
 
 export default allRoutes;
