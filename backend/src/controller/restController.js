@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 
 import { ProfileSchema } from "../model/restModel.js";
 
+import { TagSchema } from "../model/tagModel.js";
+
 const Profile = mongoose.model("Profile", ProfileSchema);
+
+const Tag = mongoose.model("Tag", TagSchema);
 
 export const addProfile = (req, res) => {
   // console.log(req.body);
@@ -80,4 +84,60 @@ export const deleteProfileByID = (req, res) => {
       res.json({ message: "The profile was deleted." });
     }
   );
+};
+export const getusertags = (req, res) => {
+  Profile.findOne({ public_id: req.params.profileID }, (err, profile) => {
+    if (err) {
+      res.send(err);
+    }
+    console.log(profile);
+    res.json(profile.tags);
+  });
+};
+export const addTags = (req, res) => {
+  let newTags = new Tag(req.body);
+
+  newTags.save((err, tag) => {
+    if (err) {
+      res.send(err);
+    }
+
+    res.json(tag);
+  });
+};
+export const getAllTags = (req, res) => {
+  Tag.find({}, (err, tag) => {
+    if (err) {
+      res.send(err);
+    }
+
+    res.json(tag);
+  });
+};
+export const updateTags = (req, res) => {
+  Tag.findOneAndUpdate(
+    { _id: "63622119a18d6735a109cef8" },
+
+    req.body,
+
+    { new: true },
+
+    (err, tag) => {
+      if (err) {
+        res.send(err);
+      }
+
+      res.json(tag);
+    }
+  );
+};
+
+export const Delete = (req, res) => {
+  Tag.deleteMany({}, (err, tag) => {
+    if (err) {
+      res.send(err);
+    }
+
+    res.json({ message: "The tag was deleted." });
+  });
 };
