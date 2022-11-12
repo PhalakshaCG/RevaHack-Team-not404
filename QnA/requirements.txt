@@ -3,3 +3,6 @@ Flask-HTTPAuth
 tflite-support
 transformers
 tensorflow
+redis
+scikit-learn
+sentence-transformers

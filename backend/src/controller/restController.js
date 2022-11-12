@@ -9,6 +9,8 @@ const Profile = mongoose.model("Profile", ProfileSchema);
 const Tag = mongoose.model("Tag", TagSchema);
 
 export const addProfile = (req, res) => {
+  // console.log(req.body);
+  // TODO: Make public address small letters
   let newProfile = new Profile(req.body);
 
   newProfile.save((err, profile) => {
@@ -29,26 +31,27 @@ export const getProfiles = (req, res) => {
     res.json(profile);
   });
 };
-
-export const getProfileByID = (req, res) => {
-  Profile.find({ public_id: req.params.profileID }, (err, profile) => {
+export const checkProfile = (req, res) => {
+  Profile.exists({ public_id: req.params.publicAddress }, (err, profile) => {
     if (err) {
       res.send(err);
     }
+    if (profile === null) {
+      res.send(false);
+    } else {
+      res.send(true);
+    }
+  });
+};
 
+export const getProfileByID = (req, res) => {
+  Profile.findOne({ public_id: req.params.profileID }, (err, profile) => {
+    if (err) {
+      res.send(err);
+    }
+    console.log(profile);
     res.json(profile);
   });
-  // profile
-  //   .find()
-  //   .where("public_id")
-  //   .equals(req.params.profileID)
-  //   .exec((err, profile) => {
-  //     if (err) {
-  //       res.send(err);
-  //     }
-
-  //     res.json(profile);
-  //   });
 };
 
 export const updateProfileByID = (req, res) => {

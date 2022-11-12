@@ -22,6 +22,7 @@ function Home() {
         .then((data) => {
           setRegister(!data);
         });
+      // getAdByTag(backend_provider, backendAdContract, [1]);
     }
     checkProfile();
     // if (true) {
@@ -61,6 +62,12 @@ function Home() {
         <div className="posts mt-5 ">
           {posts.map((post) => {
             if (post.title) {
+              let ad = {
+                __html: ""
+              };
+              if (post.ad) {
+                ad.__html = `<h>Advertisement</h>${post.ad.content}`;
+              }
               return (
                 <Post
                   key={post.id}

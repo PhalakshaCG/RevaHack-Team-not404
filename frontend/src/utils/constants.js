@@ -1,4 +1,5 @@
 import article from './Article.json'
+import advertise from './Advertise.json'
 
 export const contractAddress = "0x0585c8923c948001eF92d5D4146F13C2B05aB0c1"
 export const abi =  article.abi

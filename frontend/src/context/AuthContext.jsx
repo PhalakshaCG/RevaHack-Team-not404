@@ -33,8 +33,8 @@ export const AuthProvider = ({ children }) => {
       });
       await getProfile(_account[0]);
       setAccount(_account[0]);
-      const signer = provider.getSigner();
-      const Contract = new ethers.Contract(contractAddress, abi, signer);
+      // const signer = provider.eth.accounts;
+      const Contract = new backendProvider.eth.Contract(abi, contractAddress);
       console.log("Logged in as:", _account);
 
       const tokenContract = new backendProvider.eth.Contract(
