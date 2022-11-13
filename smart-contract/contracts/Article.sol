@@ -18,7 +18,6 @@
             owner = msg.sender;
         }
         event post(
-            uint256 id,
             address indexed from,
             string indexed newsLang,
             uint32 indexed tag,
@@ -64,7 +63,7 @@
         // *
         // * Functions for posting
         // *
-        function postArticle(address payable from, string memory newsLang, uint32 tag, string memory headline, string memory content, uint256 rating) public returns (uint256 id) {
+        function postArticle(address payable from, string memory newsLang, uint32 tag, string memory headline, string memory content, uint256 rating) public {
             require(tag<tagCount && tag>=0, "Ivalid tag");
 
             Posts[tag][postCount[tag]] = Post(
@@ -83,8 +82,7 @@
             );
             postCount[tag]++;
             
-            emit post(postCount[tag]-1, from, newsLang, tag, headline, content, block.timestamp);
-            return postCount[tag]-1;
+            emit post(from, newsLang, tag, headline, content, block.timestamp);
         }
 
         function withdraw(uint256 id, uint32 tag) payable public {
@@ -92,16 +90,25 @@
             require(current.from == msg.sender, "You are not the owner of this post");
             require(Posts[tag][id].truth, "This post has been flagged false");
             Posts[tag][id].from.transfer(current.interactions*payPerInteraction);
-            current.interactions=0;
         }
 
-        function getPostByTag(uint32 tag) public returns (Post memory) {
-            require(tag < tagCount && tag >=0, "Invalid tag");
-            require(postCount[tag]>0);
+        function getPostByTags(uint32[] memory tags) payable public {
+            uint8 i;
+            for(i=0; i<tags.length; i++)
+                require(tags[i] < tagCount && tags[i] >=0, "Invalid tag");
+
+            uint32 randTag;
             uint256 randIndex;
-            randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[tag];
-            Posts[tag][randIndex].interactions++;
-            return Posts[tag][randIndex];
+            i = 0;
+            do{
+                uint32 random = uint32(uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % tags.length);
+                randTag = tags[random];
+                randIndex = uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty, msg.sender))) % postCount[randTag];
+                i++;
+            } while(postCount[randTag]==0 && Posts[randTag][randIndex].truth && i<11);
+            require(i<11,"Unable to find posts");
+            Posts[randTag][randIndex].interactions++;
+            emit viewPost(block.number ,Posts[randTag][randIndex]);
         }
 
         // Function to fetch posts for user
@@ -140,12 +147,12 @@
             Posts[reportPostTag][reportPostID].reports.push(reportCount);
             reportCount++;
 
-            emit post(reportCount - 1, from, newsLang, 0, headline, content, block.timestamp);
+            emit post(from, newsLang, 0, headline, content, block.timestamp);
         }
 
         function confirmReport(uint256 id) public {
-            // require(msg.sender!=Posts[0][id].from);
-            // require(!includes(msg.sender, Reports[id].confirmations), "You have already confirmed");
+            require(msg.sender!=Posts[0][id].from);
+            require(!includes(msg.sender, Reports[id].confirmations), "You have already confirmed");
             require(!Reports[id].isArchived, "Report is refuted and archived");
             Reports[id].confirmations.push(msg.sender);
             if(Reports[id].confirmations.length==10){

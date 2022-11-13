@@ -2,40 +2,29 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import "../static/Common.css";
 import MyPost from "../components/MyPost";
-import getPostByID from "../helper/getPostsByID";
+import getPostByTags from "../helper/getPostsByTags";
 
 function Profile() {
   const { getUser } = useContext(AuthContext);
   const [user, setUser] = useState("");
   const [name, setName] = useState("");
-  const { contract, backendContract } = useContext(AuthContext);
+  const { contract } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const tags = [1, 2, 5];
+    const tags = [1, 2, 3, 4, 5];
     setUser(getUser());
     let Name = getUser()?.name;
     const NameArray = Name.split(" ");
     Name = "";
-    for (let i = 0; i< NameArray.length; i++) {
+    for (let i = 0; i < NameArray.length; i++) {
       Name = Name + NameArray[i][0].toUpperCase();
     }
     setName(Name);
-    
-    if(user){
-      console.log("http://localhost:4000/post/getuserposts/"+user?.public_id);
-      fetch( "http://localhost:4000/post/getuserposts/"+user?.public_id)
-      .then((data)=>{
-      console.log(data)
-      data.json().then((tags)=>{
-        console.log(tags)
-          getPostByID(backendContract, tags).then((_posts) => {
-            setPosts(_posts);
-            console.log(_posts);
-          });
-        })    
-      })
-  }
+    getPostByTags(contract, tags, 3).then((_posts) => {
+      setPosts(_posts);
+      console.log(_posts);
+    });
   }, [contract, getUser]);
 
   return (
@@ -52,19 +41,19 @@ function Profile() {
           </div>
           <div className="box-border pt-10 w-[35%] text-xl flex flex-col gap-10 text-black">
             <div className="flex flex-row justify-between">
-              <div>Public ID: </div>
+              <div>Public ID</div>
               <div>{user?.public_id?.substr(0, 15) + "..."}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>Email: </div>
+              <div>Email</div>
               <div>{user?.email}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>Brownies: </div>
+              <div>Brownies</div>
               <div>{user?.brownies}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>Penalties: </div>
+              <div>Penalties</div>
               <div>{user?.penalties}</div>
             </div>
           </div>

@@ -69,7 +69,7 @@ function Navbar() {
           </NavLink>
           <div
             className={normalStyle + activeStyle + " text-2xl cursor-pointer"}
-            onClick={()=>window.location.reload(false)}
+            onClick={logout}
           >
             Logout
           </div>

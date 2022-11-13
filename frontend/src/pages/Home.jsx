@@ -9,17 +9,9 @@ import { AuthContext } from "../context/AuthContext";
 import Signup from "./Signup";
 import MaximizedPost from "../components/MaximizedPost";
 import ReportPost from "../components/ReportPost";
-import getAdByTag from "../helper/getAdByTags";
 
 function Home() {
-  const {
-    contract,
-    isLoggedIn,
-    getPA,
-    backendContract,
-    backend_provider,
-    backendAdContract,
-  } = useContext(AuthContext);
+  const { contract, isLoggedIn, getPA, backendContract, backend_provider } = useContext(AuthContext);
   const tags = [1, 2, 3, 4, 5];
   const [posts, setPosts] = useState([]);
 
@@ -36,12 +28,7 @@ function Home() {
     // if (true) {
     //   setRegister(true);
     // }
-    getPostByTags(
-      backendContract,
-      backendAdContract,
-      tags,
-      5
-    ).then((_posts) => {
+    getPostByTags(backend_provider, backendContract, tags, 5).then((_posts) => {
       setPosts(_posts);
     });
   }, [isLoggedIn]);
@@ -82,18 +69,15 @@ function Home() {
                 ad.__html = `<h>Advertisement</h>${post.ad.content}`;
               }
               return (
-                <div>
-                  <Post
-                    key={post.id}
-                    title={post.title}
-                    description={post.description}
-                    tags={post.tags}
-                    setPostData={setPostData}
-                    setMaximizedPost={setMaximizedPost}
-                    setReportPost={setReportPost}
-                  />{" "}
-                  <div style={{textAlign:"center", padding:20, justifyContent:"center"} } dangerouslySetInnerHTML = {ad}></div>
-                </div>
+                <Post
+                  key={post.id}
+                  title={post.title}
+                  description={post.description}
+                  tags={post.tags}
+                  setPostData={setPostData}
+                  setMaximizedPost={setMaximizedPost}
+                  setReportPost={setReportPost}
+                />
               );
             }
             return <></>;
