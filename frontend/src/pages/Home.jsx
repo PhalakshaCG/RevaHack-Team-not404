@@ -9,9 +9,18 @@ import { AuthContext } from "../context/AuthContext";
 import Signup from "./Signup";
 import MaximizedPost from "../components/MaximizedPost";
 import ReportPost from "../components/ReportPost";
+import getAdByTag from "../helper/getAdByTags";
 
 function Home() {
-  const { contract, isLoggedIn, getPA, backendContract, backend_provider } = useContext(AuthContext);
+  const {
+    contract,
+    isLoggedIn,
+    getPA,
+    backendContract,
+    backend_provider,
+    backendAdContract,
+    account
+  } = useContext(AuthContext);
   const tags = [1, 2, 3, 4, 5];
   const [posts, setPosts] = useState([]);
 
@@ -28,9 +37,11 @@ function Home() {
     // if (true) {
     //   setRegister(true);
     // }
-    getPostByTags(backend_provider, backendContract, tags, 5).then((_posts) => {
-      setPosts(_posts);
-    });
+    getPostByTags(backendContract, backendAdContract, backend_provider, tags, 5, account).then(
+      (_posts) => {
+        setPosts(_posts);
+      }
+    );
   }, [isLoggedIn]);
 
   const [register, setRegister] = useState(false);
@@ -63,21 +74,37 @@ function Home() {
           {posts.map((post) => {
             if (post.title) {
               let ad = {
-                __html: ""
+                __html: "",
               };
               if (post.ad) {
                 ad.__html = `<h>Advertisement</h>${post.ad.content}`;
               }
               return (
-                <Post
-                  key={post.id}
-                  title={post.title}
-                  description={post.description}
-                  tags={post.tags}
-                  setPostData={setPostData}
-                  setMaximizedPost={setMaximizedPost}
-                  setReportPost={setReportPost}
-                />
+                <div>
+                  <Post
+                    key={post.id}
+                    title={post.title}
+                    description={post.description}
+                    tags={post.tags}
+                    interactions={post.interactions} // Pass in the number of interactions
+                    truthRating={post.rating} // Pass in truth value
+                    setPostData={setPostData}
+                    setMaximizedPost={setMaximizedPost}
+                    setReportPost={setReportPost}
+                    reportIDs={post.reportIDs}
+                    count={2} // Pass in the number of reports
+                    id={post.id}
+                    truth={post.truth}
+                  />{" "}
+                  <div
+                    style={{
+                      textAlign: "center",
+                      padding: 20,
+                      justifyContent: "center",
+                    }}
+                    dangerouslySetInnerHTML={ad}
+                  ></div>
+                </div>
               );
             }
             return <></>;

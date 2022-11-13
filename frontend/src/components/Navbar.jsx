@@ -22,7 +22,7 @@ function Navbar() {
     <div className="flex justify-between items-center between pt-[0.5vh] mb-[4rem]">
       <div className="flex items-center gap-20 ">
         <div className="flex items-center gap-3">
-          <img className="w-20" src={logo} alt="" />
+          <img className="w-14" src={logo} alt="" />
           <span className="text-xl">CheckMate</span>
         </div>
         <nav className="flex text-xl gap-8">
@@ -33,14 +33,6 @@ function Navbar() {
             to="/"
           >
             Home
-          </NavLink>
-          <NavLink
-            className={({ isActive }) => {
-              return isActive ? normalStyle + activeStyle : normalStyle;
-            }}
-            to="/search"
-          >
-            Search
           </NavLink>
           <NavLink
             className={({ isActive }) => {
@@ -69,7 +61,7 @@ function Navbar() {
           </NavLink>
           <div
             className={normalStyle + activeStyle + " text-2xl cursor-pointer"}
-            onClick={logout}
+            onClick={() => window.location.reload(false)}
           >
             Logout
           </div>
