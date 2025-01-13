@@ -2,19 +2,24 @@ import getAdByTag from "./getAdByTags";
 
 const rpcCallForTransaction = async (contract, Provider, tag, address) => {
     try {
-      console.log(`Performing RPC`);
+      console.log(`Performing RPC`,tag, address);
       
-      let nonce = await Provider.eth.getTransactionCount(address);
-      console.log(nonce);
+      const nonce = await Provider.eth.getTransactionCount(address);
+      let gasLimit = await Provider.eth.getBlock('latest');
+      gasLimit = gasLimit.gasLimit;
+      console.log(nonce, gasLimit);
       const _post = contract.methods.getPostByTag(tag);
       let post = await _post.call();
       console.log(post)
       _post.send({
         from:address,
-        gas:10000000,
+        gasPrice: 50000000000,
+        gas: gasLimit,
         nonce
       }).then((res)=>{
         console.log(res);
+      }).catch((err)=>{
+        console.log(err);
       });
       return post;
     } catch (error) {
@@ -25,20 +30,30 @@ const rpcCallForTransaction = async (contract, Provider, tag, address) => {
 
 const getPostByTags = async (Contract, adContract, Provider, tags, limit, address) => {
          
-    tags = [1,2,5]
-    const tag_list_json = await fetch("http://localhost:4000/tags");
-    const tag_list = await tag_list_json.json();
+    tags = [0,1,2,3,4]
+    let tag_list_json;
+    let tag_list;
+    try{
+      tag_list_json = await fetch("http://localhost:4000/tags");
+      tag_list = await tag_list_json.json();
+    }
+    catch (err) {
+      console.log(err);
+    }
+    
     let posts = []
     for(let i=0; i<limit; i++){
       let tag = tags[i % tags.length];
-      let post = await rpcCallForTransaction( Contract, Provider, tag, address);
+      let post_rpc = await rpcCallForTransaction( Contract, Provider, tag, address);
+      let post = {...post_rpc};
       if(!post)
         continue;
-      if(i==2){
-        getAdByTag(adContract, [0,1,2]).then((ad)=>{
-          post.ad = ad;
-        })
-      }
+      console.log(post);
+      // if(i==2){
+      //   getAdByTag(adContract, [0,1,2]).then((ad)=>{
+      //     post.ad = ad;
+      //   })
+      // }
       let tagInd = null
       if(post.tag==0)
             tagInd = 7
@@ -50,7 +65,7 @@ const getPostByTags = async (Contract, adContract, Provider, tags, limit, addres
             description: post.content,
             tags: [{
                     id: post.tag,
-                    name: tag_list[tagInd].name,//should add db query here
+                    name: tag_list[tagInd]?.name,//should add db query here
                 }],
             reportIDs: post.reports,
             rating:post.rating,
@@ -70,3 +85,6 @@ const getPostByTags = async (Contract, adContract, Provider, tags, limit, addres
 }
 
 export default getPostByTags;
+
+// Client ID: 04dc5e808d9d0820b803c18d362cd6c1
+//Secret Key: hXTlRxQ0pEN4RfuSqeed4O0HyDRvR8zZ7bsrgF0_VJgKrj0GJ9njcyMXBpjLio_qr7IIt0aLn6HoLMG4jmOzXQ

@@ -78,7 +78,7 @@ export const deleteProfileByID = (req, res) => {
 
     (err, profile) => {
       if (err) {
-        res.send(err);
+        return res.send(err);
       }
 
       res.json({ message: "The profile was deleted." });

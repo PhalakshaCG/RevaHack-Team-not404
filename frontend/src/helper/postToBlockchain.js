@@ -3,12 +3,18 @@ const postToBlockchain = async (Contract, Provider, address,  newsLang, tags, he
       console.log(address,  newsLang, tags, headline, content, rating);
       startLoading();
       let nonce = await Provider.eth.getTransactionCount(address);
-      console.log(nonce);
+      console.log("Nonce:", nonce);
+      let gasLimit = await Provider.eth.getBlock('latest');
+      gasLimit = gasLimit.gasLimit;
+      console.log(gasLimit);
       let post = await Contract.methods.postArticle(address,  newsLang, tags, headline, content, rating).send({
             from:address,
-            gas:1000000,
-            nonce
-      })
+            gas: gasLimit,
+            nonce,
+            gasPrice: 50000000000,
+      }).catch((err)=>{
+            console.log(err);
+      });
       console.log(post.events.post.returnValues)
       stopLoading();
       alert("Article posted successfully")

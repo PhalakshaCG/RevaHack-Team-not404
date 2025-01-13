@@ -25,6 +25,19 @@ export const AuthProvider = ({ children }) => {
       .then((res) => res.json())
       .then((data) => {
         setUser(data);
+      })
+      .catch((reason)=>{
+        let template = {
+          name: "John Doe",
+          public_id: "A234",
+          email: "johndoe@gmail.com",
+          penalties: 3,
+          brownies:4,
+          tags: ["Education", "Politics", "Sports"],
+      
+          creation_date: Date.now,
+        }
+        setUser(template);
       });
   }
 
@@ -34,6 +47,8 @@ export const AuthProvider = ({ children }) => {
 
       let backendProvider = new Web3(rpc_url);
       backendProvider.eth.accounts.wallet.add(private_key);
+      console.log(await backendProvider.eth.getGasPrice());
+      
       const _account = await ethereum.request({
         method: "eth_requestAccounts",
       });
@@ -45,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
       const tokenContract = new backendProvider.eth.Contract(
         abi,
-        contractAddress
+        contractAddress,
       );
       const adContract = new backendProvider.eth.Contract(
         adAbi,

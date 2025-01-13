@@ -4,12 +4,14 @@ require("@nomicfoundation/hardhat-toolbox");
 module.exports = {
   solidity: "0.8.17",
   networks:{
-    polygon_mumbai:{
+    polygon_amoy:{
       // url:"https://eth-goerli.g.alchemy.com/v2/IMsKGIGsekapyhhiAkuml6OX-eriF-l-",
-      url:"https://polygon-mumbai.g.alchemy.com/v2/kMNv2zP52eGL5HBkC1pwMzpaJ8NVaRGn",
-      accounts: ["4c8a52ed8e2f98296928613c4b66964f6e65ccd85466468e1d405bd52b296e37"],
-      gas: 2100000, 
-      gasPrice: 8000000000
+      url:"https://polygon-amoy.g.alchemy.com/v2/Y3Gbnp-Hr5KRa_xvWCboAxb41hWABRXm",
+      chainId: 80002,
+      accounts: ["6a69b0f0f97b30b6f0baff3e755bc9b1ed9790a9710579da228f202eb16f42dc"],
+      //allowUnlimitedContractSize: true,
+      //gas: 5000000, 
+      gasPrice: 50000000000
     }
   }
 };

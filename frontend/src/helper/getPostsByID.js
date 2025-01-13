@@ -15,8 +15,8 @@ const getPostByID = async (Contract, tags) => {
     const tag_list = await tag_list_json.json();
     let posts = []
     console.log(tags)
-    for(let i=0; i<tags.length; i++){
-        let tag = tags[i];
+    for(let tag of tags){
+        console.log(tag)
         let post = await rpcCallForTransaction( Contract, tag[1], tag[0]);
         if(!post)
         continue;
@@ -31,7 +31,7 @@ const getPostByID = async (Contract, tags) => {
             description: post.content,
             tags: [{
                     id: post.tag,
-                    name: tag_list[tagInd].name,//should add db query here
+                    name: tag_list[tagInd]?.name,//should add db query here
                 }],
             reportIDs: post.reports,
             rating:post.rating,

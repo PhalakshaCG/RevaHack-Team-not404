@@ -7,10 +7,13 @@ const postReportArticle = async (Contract, Provider,reportTag, reportID, address
     console.log({
         nonce
     });
+    let gasLimit = await Provider.eth.getBlock('latest');
+    gasLimit = gasLimit.gasLimit;
     let post = await Contract.methods.reportArticle(parseInt(reportTag), reportID, address,  newsLang, headline, content, rating)
     .send({
           from:address,
-          gas:1000000,
+          gas:gasLimit,
+          gasPrice: 50000000000,
           nonce
     })
     stopLoading();
