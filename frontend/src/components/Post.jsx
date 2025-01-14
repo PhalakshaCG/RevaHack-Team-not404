@@ -10,6 +10,7 @@ import getPostByID from "../helper/getPostsByID";
 import confirmReport from "../helper/confirmReport";
 import refuteReport from "../helper/refuteReport";
 import gradient from "../assets/gradient.svg"
+import getAdByTag from "../helper/getAdByTags";
 
 function Post({
   id,
@@ -24,9 +25,11 @@ function Post({
   interactions,
   count,
   truth,
+  ad,
 }) {
   const [showReportPosts, setShowReportPosts] = useState(false);
   const [reportPosts, setReportPosts] = useState([]);
+  const [adData, setAdData] = useState("");
   const {contract, backend_provider, account} = useContext(AuthContext);
   function componentToHex(c) {
     var hex = c.toString(16);
@@ -194,6 +197,14 @@ function Post({
       ) : (
         <></>
       )}
+      <div
+                    style={{
+                      textAlign: "center",
+                      padding: 20,
+                      justifyContent: "center",
+                    }}
+                    dangerouslySetInnerHTML={adData}
+                  ></div>
     </div>
   );
 }

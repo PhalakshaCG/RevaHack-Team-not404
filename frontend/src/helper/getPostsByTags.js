@@ -28,7 +28,7 @@ const rpcCallForTransaction = async (contract, Provider, tag, address) => {
     }
   };
 
-const getPostByTags = async (Contract, adContract, Provider, tags, limit, address) => {
+const getPostByTags = async (Contract, adContract, Provider, tags, limit, address, setPosts) => {
          
     tags = [0,1,2,3,4]
     let tag_list_json;
@@ -48,12 +48,6 @@ const getPostByTags = async (Contract, adContract, Provider, tags, limit, addres
       let post = {...post_rpc};
       if(!post)
         continue;
-      console.log(post);
-      // if(i==2){
-      //   getAdByTag(adContract, [0,1,2]).then((ad)=>{
-      //     post.ad = ad;
-      //   })
-      // }
       let tagInd = null
       if(post.tag==0)
             tagInd = 7
@@ -78,10 +72,13 @@ const getPostByTags = async (Contract, adContract, Provider, tags, limit, addres
           post.confirmations = report.confirmations;
           post.refutations = report.refutations;
       }
+      if(i%2==0){
+        post.ad = true;
+      }
       posts.push(_post);
     }
     console.log(posts);
-    return posts;
+    setPosts(posts);
 }
 
 export default getPostByTags;

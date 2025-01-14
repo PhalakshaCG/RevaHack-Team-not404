@@ -2,7 +2,15 @@ import { ownerWallet, adContractAddress as contractAddress, private_key } from '
 const rpcCallForTransaction = async ( contract, tags) => {
     try {
       console.log(`Performing Ad RPC`);
+      let complete = false;
+      setTimeout(()=>{
+        if(!complete){
+          window.alert("Please be patient. Transaction in progress");
+        }
+      }, 5000)
       let ad = await contract.methods.getRandAdByTag(tags).call();
+      complete = true;
+      console.log(ad);
       return ad;
     } catch (error) {
       console.error('Error in transferTokens >', error);

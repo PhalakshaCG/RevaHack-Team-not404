@@ -37,11 +37,7 @@ function Home() {
     // if (true) {
     //   setRegister(true);
     // }
-    getPostByTags(backendContract, backendAdContract, backend_provider, tags, 5, account).then(
-      (_posts) => {
-        setPosts(_posts);
-      }
-    );
+    getPostByTags(backendContract, backendAdContract, backend_provider, tags, 5, account, setPosts)
   }, [isLoggedIn]);
 
   const [register, setRegister] = useState(false);
@@ -95,15 +91,9 @@ function Home() {
                     count={2} // Pass in the number of reports
                     id={post.id}
                     truth={post.truth}
+                    ad={post.ad}
                   />{" "}
-                  <div
-                    style={{
-                      textAlign: "center",
-                      padding: 20,
-                      justifyContent: "center",
-                    }}
-                    dangerouslySetInnerHTML={ad}
-                  ></div>
+                  
                 </div>
               );
             }
